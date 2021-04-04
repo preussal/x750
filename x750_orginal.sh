@@ -21,7 +21,7 @@ while [ 1 ]; do
   shutdownSignal=$(cat /sys/class/gpio/gpio$SHUTDOWN/value)
   if [ $shutdownSignal = 0 ]; then
     /bin/sleep 0.2
-  else  
+  else
     pulseStart=$(date +%s%N | cut -b1-13)
     while [ $shutdownSignal = 1 ]; do
       /bin/sleep 0.02
@@ -32,7 +32,7 @@ while [ 1 ]; do
       fi
       shutdownSignal=$(cat /sys/class/gpio/gpio$SHUTDOWN/value)
     done
-    if [ $(($(date +%s%N | cut -b1-13)-$pulseStart)) -gt $REBOOTPULSEMINIMUM ]; then 
+    if [ $(($(date +%s%N | cut -b1-13)-$pulseStart)) -gt $REBOOTPULSEMINIMUM ]; then
       echo "X750 Rebooting", SHUTDOWN, ", recycling Rpi ..."
       sudo reboot
       exit
@@ -40,7 +40,7 @@ while [ 1 ]; do
   fi
 done' > /etc/x750pwr.sh
 sudo chmod +x /etc/x750pwr.sh
-sudo sed -i '$ i /etc/x750pwr.sh &' /etc/rc.local 
+sudo sed -i '$ i /etc/x750pwr.sh &' /etc/rc.local
 
 
 #X750 full shutdown through Software
@@ -122,4 +122,3 @@ while True:
  time.sleep(2)
 ' > /home/pi/x750ups.py
 sudo chmod +x /home/pi/x750ups.py
-
