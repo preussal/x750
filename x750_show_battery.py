@@ -6,6 +6,7 @@ import smbus
 import sys
 import time
 
+
 def readVoltage(bus):
 
      address = 0x36
@@ -13,6 +14,7 @@ def readVoltage(bus):
      swapped = struct.unpack("<H", struct.pack(">H", read))[0]
      voltage = swapped * 1.25 /1000/16
      return voltage
+
 
 def readCapacity(bus):
 
@@ -22,20 +24,20 @@ def readCapacity(bus):
      capacity = swapped/256
      return capacity
 
+
 bus = smbus.SMBus(1) # 0 = /dev/i2c-0 (port I2C0), 1 = /dev/i2c-1 (port I2C1)
 
 while True:
- print ("******************")
- print ("Voltage: "+str(readVoltage(bus))+"V")
- print ("Battery: "+str(readCapacity(bus))+"%")
+     voltage = float(readVoltage(bus))
+     battery = int(readCapacity(bus))
 
- if readCapacity(bus) == 100:
+     print ("******************")
+     print ("Voltage: "+str(round(voltage,2))+"V")
+     print ("Battery: "+str(battery)+"%")
 
-         print ("Battery FULL")
-
- if readCapacity(bus) < 20:
-
-
-         print ("Battery LOW")
- print ("******************")
- time.sleep(5)
+     if battery == 100:
+          print ("Battery: FULL")
+     if battery < 20:
+          print ("Battery: LOW")
+     print ("******************")
+     time.sleep(5)
