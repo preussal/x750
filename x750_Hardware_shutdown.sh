@@ -2,9 +2,11 @@
 # X750 Powering on /reboot /full shutdown through hardware
 #/usr/local/bin/x750_Hardware_shutdown.sh
 
-SHUTDOWN=4
+
 REBOOTPULSEMINIMUM=200
 REBOOTPULSEMAXIMUM=600
+
+SHUTDOWN=4
 echo "$SHUTDOWN" > /sys/class/gpio/export
 echo "in" > /sys/class/gpio/gpio$SHUTDOWN/direction
 BOOT=17

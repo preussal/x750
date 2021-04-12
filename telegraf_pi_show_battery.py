@@ -1,11 +1,10 @@
 #!/usr/bin/env python
-# X750 Battery voltage & precentage reading
+# X750 Battery voltage & precentage reading for Telegraf
+# Add telegrafuser to i2c group in /etc/group
 
 import struct
 import smbus
-import sys
-import time
-
+import json
 
 def readVoltage(bus):
 
@@ -14,7 +13,6 @@ def readVoltage(bus):
      swapped = struct.unpack("<H", struct.pack(">H", read))[0]
      voltage = swapped * 1.25 /1000/16
      return voltage
-
 
 def readCapacity(bus):
 
@@ -26,19 +24,8 @@ def readCapacity(bus):
 
 bus = smbus.SMBus(1) # 0 = /dev/i2c-0 (port I2C0), 1 = /dev/i2c-1 (port I2C1)
 
-while True:
-     voltage = float(readVoltage(bus))
-     battery = int(readCapacity(bus))
-
-     print ("******************")
-     print ("Voltage: "+str(round(voltage,2))+"V")
-     print ("Battery: "+str(battery)+"%")
-
-     if battery == 100:
-          print ("Battery: FULL")
-     if battery >= 90:
-          print ("Battery: > 90% FULL")
-     if battery < 20:
-          print ("Battery: LOW")
-     print ("******************")
-     time.sleep(5)
+battery_dict = {
+    'Battery Voltage' : round(float(readVoltage(bus)),2),
+    'Battery Charge'  : int(readCapacity(bus))
+}
+print(json.dumps(battery_dict))

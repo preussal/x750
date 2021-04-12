@@ -11,13 +11,18 @@ This is the safe shutdonw & reading Battery voltage and capacity script for x750
 ```shell
  sudo raspi-config
 ```
-Select 5 Interfacing Options and then  P5 I2C - Enable/Disable automatic loading. A prompt will appear asking Would you like the ARM I2C interface to be enabled?, select "Yes" 
+Select 5 Interfacing Options and then  P5 I2C - Enable/Disable automatic loading. A prompt will appear asking Would you like the ARM I2C interface to be enabled?, select "Yes"
 
 ##2. Install I2C-tools software package.
 ```shell
- sudo apt-get install python-smbus 
- sudo apt-get install i2c-tools 
+ sudo apt-get install python-smbus
+ sudo apt-get install i2c-tools
 ```
+
+##3. Download the required script
+Copy the Scripts to /usr/local/bin/
+
+
 ##3. Download the required script
 ```shell
  git clone https://github.com/geekworm-com/x750.git
@@ -45,3 +50,19 @@ sudo bash x750.sh
 #About Geekworm
 
 Geekworm is specialize in open source hardware research and developemnt,we aim to provide high quality products with reasonable price, fast shipping as customer's requirement and intimate after-sales service.The recognition and trust of customers is the greatest inspiration to Geekworm.
+
+
+
+#7. add Python script for Telegraf to read the values
+
+add Telegraf user to the i2c group
+and add this config part to Telegraf.conf
+Telegraf.conf
+
+```shell
+[[inputs.exec]]
+ commands = ["/usr/local/bin/telegraf_pi_show_battery.py"]
+ timeout = "5s"
+ data_format = "json"
+ name_suffix = "_pi_battery"
+```
